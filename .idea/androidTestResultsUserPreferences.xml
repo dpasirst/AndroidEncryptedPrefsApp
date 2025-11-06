@@ -36,6 +36,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Google Pixel 4a (5G)" value="120" />
+                  <entry key="Google Pixel 9" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -81,6 +82,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="615078616">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Google Pixel 9" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="639918824">
           <value>
             <AndroidTestResultsTableState>
@@ -88,6 +102,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Google Pixel 4a (5G)" value="120" />
+                  <entry key="Google Pixel 9" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -134,6 +149,45 @@
           </value>
         </entry>
         <entry key="991860132">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Google Pixel 4a (5G)" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1385633285">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Google Pixel 9" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1593737095">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Google Pixel 4a (5G)" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1593737126">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">

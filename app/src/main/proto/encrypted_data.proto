@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "net.secretshield.encryptedprefsapp.proto";
+option java_outer_classname = "EncryptedDataProto";
+
+message EncryptedData {
+  map<string, bytes> key_values = 1;
+}

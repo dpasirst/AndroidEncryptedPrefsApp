@@ -70,7 +70,7 @@ class EncryptedPreferencesDataStore(
         File(context.filesDir, fileName)
     },
     backupScope: CoroutineScope? = CoroutineScope(Dispatchers.IO + SupervisorJob())
-) {
+) : IEncryptedDataStore {
     /**
      * Encrypted DataStore configuration. We track this because we may only have a single
      * instance pointing to a single location of a DataStore. This is used to keep all
@@ -178,7 +178,7 @@ class EncryptedPreferencesDataStore(
         inDelayPeriod = cfg.inDelayPeriod
     }
 
-    internal val backupFile: File //backupLocation(dataStoreName + BACKUP_FILE_EXT)
+    override val backupFile: File
         get() = pBackupLocation(pDataStoreName + BACKUP_FILE_EXT)
 
     fun deleteBackupFile() {
@@ -242,7 +242,7 @@ class EncryptedPreferencesDataStore(
      * Flow that emits all preferences as Map<String, String> (decrypted)
      * This will decrypt values but it will **not** attempt to decode (deserialize) values
      */
-    val preferencesFlow: Flow<Map<String, String>> = dataStore.data.map { preferences ->
+    override val preferencesFlow: Flow<Map<String, String>> = dataStore.data.map { preferences ->
         preferences.asMap().mapKeys { it.key.name }.mapValues { (it.value as? String)?.let { encrypted ->
             runCatching { cryptoManager.decryptToString(encrypted) }.getOrElse { "Decryption failed" }
         } ?: "" }
@@ -253,7 +253,7 @@ class EncryptedPreferencesDataStore(
      * Will put (aka set) the value by encrypting and storing it for a given key.
      */
     @Throws(Exception::class)
-    suspend fun putString(key: String, value: String) {
+    override suspend fun putString(key: String, value: String) {
         val preferencesKey = stringPreferencesKey(key)
         val encryptedValue = cryptoManager.encryptToString(value)
         dataStore.edit { it[preferencesKey] = encryptedValue }
@@ -263,7 +263,7 @@ class EncryptedPreferencesDataStore(
     /**
      * Will provide a decrypted value for a given key.
      */
-    suspend fun getString(key: String): String? {
+    override suspend fun getString(key: String): String? {
         val preferencesKey = stringPreferencesKey(key)
         val encryptedValue = try {
             val preferences = dataStore.data.first()
@@ -292,7 +292,7 @@ class EncryptedPreferencesDataStore(
      * dataStore.flowString(key).collect { values.add(it) }
      * ```
      */
-    fun flowString(key: String): Flow<String?> {
+    override fun flowString(key: String): Flow<String?> {
         val preferencesKey = stringPreferencesKey(key)
         return dataStore.data.map { preferences ->
             preferences[preferencesKey]?.let { encryptedValue ->
@@ -379,7 +379,7 @@ class EncryptedPreferencesDataStore(
     /**
      * will remove the key value from the datastore and notify that a backup is required
      */
-    suspend fun remove(key: String) {
+    override suspend fun remove(key: String) {
         val preferencesKey = stringPreferencesKey(key)
         dataStore.edit { it.remove(preferencesKey) }
         createBackup()
@@ -389,7 +389,7 @@ class EncryptedPreferencesDataStore(
      * Clear all preferences and deletes the backup file containing the last backup
      * of the preferences.
      */
-    suspend fun clearAll() {
+    override suspend fun clearAll() {
         job?.cancel()
         dataStore.edit { it.clear() }
         deleteBackupFile()

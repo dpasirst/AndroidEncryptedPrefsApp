@@ -8,16 +8,16 @@
       <SelectionState runConfigName="EncryptedPreferencesDataStoreTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="restoreFromBackup_onCorruption2()">
+      <SelectionState runConfigName="backup_isCreatedAfterPut()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="restoreFromBackup_onCorruption1()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="backup_isCreatedAfterPut()">
+      <SelectionState runConfigName="EncryptedKVDataStoreTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="flowPrimitiveValue2_emitsValueChanges()">
+      <SelectionState runConfigName="backup_isCreatedAfterPut() (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

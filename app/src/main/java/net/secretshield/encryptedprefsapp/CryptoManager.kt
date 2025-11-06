@@ -1,6 +1,7 @@
 package net.secretshield.encryptedprefsapp
 
 
+import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProperties.PURPOSE_ENCRYPT
@@ -39,15 +40,17 @@ class CryptoManager(private val useStrongBox: Boolean = false) {
 
     private fun generateKey(): SecretKey {
         val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE)
-        val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+        val builder = KeyGenParameterSpec.Builder(
             alias,
             PURPOSE_ENCRYPT or PURPOSE_DECRYPT
         )
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .setIsStrongBoxBacked(useStrongBox)
             .setKeySize(256)
-            .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            builder.setIsStrongBoxBacked(useStrongBox)
+        }
+        val keyGenParameterSpec = builder.build()
 
         keyGenerator.init(keyGenParameterSpec)
         return keyGenerator.generateKey()

@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -60,6 +61,7 @@ fun PreferencesScreen(
 ) {
     val preferences by viewModel.preferencesState.collectAsState()
     val backupTs by viewModel.backupFileTs.collectAsState()
+    val mode by viewModel.currentMode.collectAsState()
 
     val scope = rememberCoroutineScope()
 
@@ -71,6 +73,24 @@ fun PreferencesScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // DataStore mode switch (below title)
+        Text(
+            text = "DataStore Mode",
+            style = MaterialTheme.typography.headlineSmall
+        )
+        Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+            Text("pref")
+            Switch(
+                checked = mode == DataStoreMode.KV,
+                onCheckedChange = { isChecked ->
+                    viewModel.setMode(if (isChecked) DataStoreMode.KV else DataStoreMode.PREF)
+                }
+            )
+            Text("proto")
+        }
+
+        Spacer(modifier = Modifier.padding(16.dp))
+
         // Add new preference section
         Text(
             text = "Manage Preferences",

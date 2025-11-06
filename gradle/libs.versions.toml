@@ -13,6 +13,10 @@ datastore = "1.1.1"
 kotlinxSerializationJson = "1.6.3"
 lifecycleViewModelKtx = "2.8.1"
 kotlinxCoroutinesTest = "1.10.2"
+protobufPlugin = "0.9.5"
+protobuf = "4.33.0"
+protoc = "4.33.0"
+protocJavaLite = "3.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,9 +38,14 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewModelKtx" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+protoc-compiler = { group = "com.google.protobuf", name = "protoc", version.ref = "protoc" }
+protoc-compiler-java-lite = { group = "com.google.protobuf", name = "protoc-gen-javalite", version.ref = "protocJavaLite" }
+protoc-java-lite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
+protoc-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }

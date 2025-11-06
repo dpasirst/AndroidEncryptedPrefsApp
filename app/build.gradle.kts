@@ -1,8 +1,11 @@
+import com.google.protobuf.gradle.id
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.protobuf)
 }
 
 android {
@@ -40,6 +43,34 @@ android {
     buildFeatures {
         compose = true
     }
+
+}
+
+// see example: https://github.com/google/protobuf-gradle-plugin/blob/master/testProjectAndroidKotlinDsl/build.gradle.kts
+protobuf {
+    protoc {
+        //"com.google.protobuf:protoc:4.33.0"
+        artifact = libs.protoc.compiler.asProvider().get().toString()
+    }
+    plugins {
+        id("javalite") {
+            //"com.google.protobuf:protoc-gen-javalite:3.0.0"
+            artifact = libs.protoc.compiler.java.lite.get().toString()
+        }
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.plugins {
+                //create("kotlin")
+                id("kotlin") {
+                    option("lite")
+                }
+                id("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -54,6 +85,10 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.protoc.compiler)
+    implementation(libs.protoc.compiler.java.lite)
+    implementation(libs.protoc.java.lite)
+    implementation(libs.protoc.kotlin.lite)
     implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)

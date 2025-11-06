@@ -1,7 +1,6 @@
 package net.secretshield.encryptedprefsapp
 
 import android.content.Context
-import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.CoroutineScope
@@ -17,12 +16,12 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import org.junit.After
+import org.junit.Before
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
@@ -33,19 +32,19 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
-class EncryptedPreferencesDataStoreTest {
+class EncryptedKVDataStoreTest {
 
-    private lateinit var dataStore: EncryptedPreferencesDataStore
+    private lateinit var dataStore: EncryptedKVDataStore
     private lateinit var context: Context
     private val testScheduler = TestCoroutineScheduler()
     private val testDispatcher = StandardTestDispatcher(testScheduler)
     private val testScope = TestScope(testDispatcher + Job())
-    private val testDataStoreName = "test_encrypted_prefs"
+    private val testDataStoreName = "test_encrypted_kv"
 
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
-        dataStore = EncryptedPreferencesDataStore(
+        dataStore = EncryptedKVDataStore(
             context = context,
             dataStoreName = testDataStoreName,
             backupDelayDuration = 10.milliseconds,
@@ -58,13 +57,13 @@ class EncryptedPreferencesDataStoreTest {
         dataStore.clearAll()
         testScheduler.advanceUntilIdle()
         testScope.cancel()
-        val datastoreFile = context.preferencesDataStoreFile(testDataStoreName)
+        val datastoreFile = File(context.filesDir, testDataStoreName)
         if (datastoreFile.exists()) {
             datastoreFile.delete()
         }
         val backupFile = File(
             context.filesDir,
-            "$testDataStoreName${EncryptedPreferencesDataStore.BACKUP_FILE_EXT}"
+            "$testDataStoreName${EncryptedKVDataStore.BACKUP_FILE_EXT}"
         )
         if (backupFile.exists()) {
             backupFile.delete()
@@ -295,15 +294,15 @@ class EncryptedPreferencesDataStoreTest {
         assertTrue("Fail Rename failed!", dataStore.backupFile.renameTo(backupFileV2))
 
         // 4. Corrupt the datastore file
-        val datastoreFile = context.preferencesDataStoreFile(testDataStoreNameV2)
+        val datastoreFile = File(context.filesDir, testDataStoreNameV2)
         // Overwrite with random bytes to ensure invalid ProtoBuf data (protobuf corruption)
         var corruptBytes = byteArrayOf('\n'.code.toByte())
         corruptBytes += '\n'.code.toByte()
         corruptBytes += Random.nextBytes(1024)
         datastoreFile.writeBytes(corruptBytes)
 
-        // 5. Re-initialize EncryptedPreferencesDataStore to trigger corruption handler
-        val newDataStore = EncryptedPreferencesDataStore(context, testDataStoreNameV2, backupScope = CoroutineScope(Dispatchers.IO + SupervisorJob()))
+        // 5. Re-initialize EncryptedKVDataStore to trigger corruption handler
+        val newDataStore = EncryptedKVDataStore(context, testDataStoreNameV2, backupScope = CoroutineScope(Dispatchers.IO + SupervisorJob()))
         // Note: No advanceUntilIdle needed as operations use Dispatchers.IO
 
         // 6. Check if the data was restored from the backup
@@ -337,7 +336,7 @@ class EncryptedPreferencesDataStoreTest {
         assertTrue(dataStore.backupFile.exists())
 
         // 2. Corrupt the datastore file
-        val datastoreFile = context.preferencesDataStoreFile(testDataStoreName)
+        val datastoreFile = File(context.filesDir, testDataStoreName)
         // Overwrite with random bytes to ensure invalid ProtoBuf data (protobuf corruption)
         var corruptBytes = byteArrayOf('\n'.code.toByte())
         corruptBytes += '\n'.code.toByte()
@@ -349,6 +348,7 @@ class EncryptedPreferencesDataStoreTest {
         // 4. Check if the data was restored from the backup
         val restoredValue = dataStore.getString(key)
         assertTrue("$value != $restoredValue",value.contentEquals(restoredValue))
+        testScheduler.advanceTimeBy(5000L.milliseconds)
     }
 
     @Serializable
