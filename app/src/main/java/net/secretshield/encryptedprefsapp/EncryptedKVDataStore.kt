@@ -33,7 +33,10 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-// Moved to be inside the class so it can access backup file
+/**
+ * As per the [official documentation](https://developer.android.com/topic/libraries/architecture/datastore#proto-create),
+ * A custom serializer is required for use with our protobuf. This will be passed to the datastore.
+ */
 private object EncryptedDataSerializer : Serializer<EncryptedDataProto.EncryptedData> {
     override val defaultValue: EncryptedDataProto.EncryptedData = EncryptedDataProto.EncryptedData.getDefaultInstance()
 
@@ -53,7 +56,30 @@ private object EncryptedDataSerializer : Serializer<EncryptedDataProto.Encrypted
 
 /**
  * EncryptedKVDataStore is a factory initializer for DataStore using custom EncryptedData
- * for storing encrypted key-value pairs as ByteArray (no base64).
+ * for storing encrypted key-value pairs as ByteArray (no base64 except for use by the backup file).
+ *
+ * On Android, `DataStores` (`androidx.datastore`) must be singletons per file and there is no
+ * concept of closing it and opening it again. It must be the same exact instance per
+ * DataStore file location.
+ *
+ * This class maintains the singleton reference keyed to the `storageLocation(dataStoreName).path`.
+ *
+ * @param context is the android context used for the default initialization storageLocation
+ * and backupLocation. If you provide your own, implementations for those parameters, then context
+ * may be null.
+ * @param dataStoreName is the name of the DataStore file.
+ * @param storageLocation is the location of the DataStore file as a function receiving the
+ * `dataStoreName` and returning a File object to that location.
+ * @param backupDelayDuration is the delay before creating a backup upon insert, update, delete
+ * operations. If there are multiple operations before the duration is reached, then all those
+ * operations will be included in a single backup
+ * @param backupLocation is the location of the backup file as a function receiving the
+ * `dataStoreName` plus `BACKUP_FILE_EXT` and returning a File object to that location.
+ * @param backupScope is coroutine scope to run the creation of the backup file, if null or
+ * cancelled then no backup will be created.
+ *
+ * @throws Exception if context is null and no initialization values are provided for
+ * `storageLocation` or `backupLocation`
  */
 class EncryptedKVDataStore(
     private val context: Context?,
