@@ -85,6 +85,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.google.tink)
     implementation(libs.protoc.compiler)
     implementation(libs.protoc.compiler.java.lite)
     implementation(libs.protoc.java.lite)

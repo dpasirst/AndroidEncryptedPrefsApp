@@ -17,6 +17,7 @@ protobufPlugin = "0.9.5"
 protobuf = "4.33.0"
 protoc = "4.33.0"
 protocJavaLite = "3.0.0"
+tink-android = "1.19.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +39,7 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewModelKtx" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+google-tink = { group = "com.google.crypto.tink", name = "tink-android", version.ref = "tink-android" }
 protoc-compiler = { group = "com.google.protobuf", name = "protoc", version.ref = "protoc" }
 protoc-compiler-java-lite = { group = "com.google.protobuf", name = "protoc-gen-javalite", version.ref = "protocJavaLite" }
 protoc-java-lite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobuf" }
